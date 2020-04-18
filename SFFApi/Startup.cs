@@ -75,6 +75,13 @@ namespace SFFApi
                     };
                 });
 
+            // Admin Role policy
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin",
+                     policy => policy.RequireClaim("UserRole", "Admin"));
+            });
+
             //services.AddRazorPages();
 
             // Add some swagger

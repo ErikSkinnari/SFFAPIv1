@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SFFApi.Contracts.V1;
 using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
 using SFFApi.Domain;
+using SFFApi.Extensions;
 using SFFApi.Services;
 using System;
 using System.Collections.Generic;
@@ -61,9 +63,15 @@ namespace SFFApi.Controllers.V1
             return NotFound();
         }
         
+        [Authorize()]
         [HttpDelete(ApiRoutes.Studios.Delete)]
         public async Task<IActionResult> Delete([FromRoute]Guid Id)
         {
+            if(HttpContext.IsAdmin() == false)
+            {
+                return BadRequest(new { error = "You need to be admin to delete" });
+            }
+
             var studioDeleted = await _studioService.DeleteStudioAsync(Id);
             if (studioDeleted)
             {
@@ -73,21 +81,10 @@ namespace SFFApi.Controllers.V1
             return NotFound();
         }
 
-        [HttpPost(ApiRoutes.Studios.Create)] // TODO Fix this method
+        [HttpPost(ApiRoutes.Studios.Create)]
         public async Task<IActionResult> Create([FromBody] CreateStudioRequest request)
         {
-            var studio = new Studio
-            {
-                StudioId = Guid.NewGuid(),
-                Name = request.Name,
-                Address = new Address
-                {
-                    AddressLine1 = request.AddressLine1,
-                    AddressLine2 = request.AddressLine2,
-                    ZipCode = request.ZipCode,
-                    City = request.City
-                }
-            };
+            var studio = _studioService.CreateStudioFromRequest(request);
 
             var success = await _studioService.AddStudioAsync(studio);
             if (!success)

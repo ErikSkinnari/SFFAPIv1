@@ -90,7 +90,8 @@ namespace SFFApi.Services
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim("Id", user.Id)
+                    new Claim("Id", user.Id),
+                    new Claim("UserRole", "User")
                 }),
 
                 Expires = DateTime.UtcNow.AddHours(5),
@@ -104,8 +105,6 @@ namespace SFFApi.Services
                 Success = true,
                 Token = tokenHandler.WriteToken(token)
             };
-        }
-
-        
+        }        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SFFApi.Contracts.V1.Requests;
 using SFFApi.Data;
 using SFFApi.Domain;
 using System;
@@ -22,6 +23,24 @@ namespace SFFApi.Services
             await _dataContext.Studios.AddAsync(studio);
             var created = await _dataContext.SaveChangesAsync();
             return created > 0;
+        }
+
+        public Studio CreateStudioFromRequest(CreateStudioRequest request)
+        {
+            var studio = new Studio
+            {
+                StudioId = Guid.NewGuid(),
+                Name = request.Name,
+                Address = new Address
+                {
+                    AddressLine1 = request.AddressLine1,
+                    AddressLine2 = request.AddressLine2,
+                    ZipCode = request.ZipCode,
+                    City = request.City
+                }
+            };
+
+            return studio;
         }
 
         public async Task<bool> DeleteStudioAsync(Guid studioId)

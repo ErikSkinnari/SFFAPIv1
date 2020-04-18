@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SFFApi.Contracts.V1.Requests;
 using SFFApi.Data;
 using SFFApi.Domain;
 using System;
@@ -53,6 +54,17 @@ namespace SFFApi.Services
             _dataContext.Movies.Update(movieToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
             return updated > 0; // If anything was changed return true.
+        }
+
+        public Movie CreateMovieFromRequest(CreateMovieRequest request)
+        {
+            var movie = new Movie
+            {
+                MovieId = Guid.NewGuid(),
+                Title = request.Title
+            };
+
+            return movie;
         }
     }
 }

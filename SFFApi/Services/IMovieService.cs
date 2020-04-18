@@ -1,4 +1,5 @@
-﻿using SFFApi.Domain;
+﻿using SFFApi.Contracts.V1.Requests;
+using SFFApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace SFFApi.Services
         Task<bool> UpdateMovieAsync(Movie movieToUpdate);
         Task<bool> DeleteMovieAsync(Guid movieId);
         Task<bool> AddMovieAsync(Movie movieToAdd);
+        Movie CreateMovieFromRequest(CreateMovieRequest request);
     }
 }

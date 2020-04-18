@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFFApi.Contracts.V1;
 using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
 using SFFApi.Domain;
+using SFFApi.Extensions;
 using SFFApi.Services;
 
 namespace SFFApi.Controllers.V1
@@ -56,9 +58,15 @@ namespace SFFApi.Controllers.V1
             return NotFound();
         }
 
+        [Authorize()]
         [HttpDelete(ApiRoutes.Movies.Delete)]
         public async Task<IActionResult> Delete([FromRoute]Guid Id)
         {
+            if(HttpContext.IsAdmin() == false)
+            {
+                return BadRequest( new { error = "You need to be admin to delete a movie" });
+            } 
+
             var movieDeleted = await _movieService.DeleteMovieAsync(Id);
 
             if (movieDeleted)
@@ -72,11 +80,7 @@ namespace SFFApi.Controllers.V1
         [HttpPost(ApiRoutes.Movies.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMovieRequest request)
         {
-            var movie = new Movie 
-            {
-                MovieId = Guid.NewGuid(), 
-                Title = request.Title 
-            };
+            var movie = _movieService.CreateMovieFromRequest(request);
 
             var success = await _movieService.AddMovieAsync(movie);
             if (!success)
