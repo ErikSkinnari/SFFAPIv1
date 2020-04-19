@@ -56,7 +56,7 @@ namespace SFFApi.Services
             return updated > 0; // If anything was changed return true.
         }
 
-        public Movie CreateMovieFromRequest(CreateMovieRequest request)
+        public Movie CreateMovieFromRequest(CreateMovieRequestDto request)
         {
             var movie = new Movie
             {

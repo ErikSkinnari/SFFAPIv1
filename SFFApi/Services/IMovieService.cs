@@ -14,6 +14,6 @@ namespace SFFApi.Services
         Task<bool> UpdateMovieAsync(Movie movieToUpdate);
         Task<bool> DeleteMovieAsync(Guid movieId);
         Task<bool> AddMovieAsync(Movie movieToAdd);
-        Movie CreateMovieFromRequest(CreateMovieRequest request);
+        Movie CreateMovieFromRequest(CreateMovieRequestDto request);
     }
 }

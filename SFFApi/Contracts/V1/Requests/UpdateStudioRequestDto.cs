@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SFFApi.Contracts.V1.Requests
 {
-    public class CreateStudioRequest
+    public class UpdateStudioRequestDto
     {
         public string Name { get; set; }
         public string AddressLine1 { get; set; }

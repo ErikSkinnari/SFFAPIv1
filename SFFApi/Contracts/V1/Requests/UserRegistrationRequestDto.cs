@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SFFApi.Contracts.V1.Requests
 {
-    public class UserRegistrationRequest
+    public class UserRegistrationRequestDto
     {
         [EmailAddress]
         public string Email { get; set; }

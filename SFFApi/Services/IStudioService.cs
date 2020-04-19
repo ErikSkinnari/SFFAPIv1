@@ -14,6 +14,6 @@ namespace SFFApi.Services
         Task<Studio> GetStudioByIdAsync(Guid studioId);
         Task<bool> UpdateStudioAsync(Studio studioToUpdate);
         Task<bool> DeleteStudioAsync(Guid studioId);
-        Studio CreateStudioFromRequest(CreateStudioRequest request);
+        Studio CreateStudioFromRequest(CreateStudioRequestDto request);
     }
 }

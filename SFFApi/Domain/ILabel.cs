@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFFApi.Contracts.V1.Requests
+namespace SFFApi.Domain
 {
-    public class CreateMovieRequest
+    public interface ILabel
     {
-        public string Title { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SFFApi.Contracts.V1.Requests
 {
-    public class UpdateMovieRequest
+    public class CreateMovieRequestDto
     {
         public string Title { get; set; }
     }

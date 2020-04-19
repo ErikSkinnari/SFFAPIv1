@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace SFFApi.Contracts.V1.Requests
 {
-    public class UserLoginRequest
+    public class LabelRequest
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-
+        public Guid MovieId { get; set; }
+        public Guid StudioId { get; set; }
     }
 }

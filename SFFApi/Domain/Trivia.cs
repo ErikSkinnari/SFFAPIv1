@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace SFFApi.Domain
 {
-    public class Movie
+    public class Trivia
     {
         public int Id { get; set; }
-        public Guid MovieId { get; set; }
-        public string Title { get; set; }
+        public string TriviaText { get; set; }
 
-        public List<Score> Scores { get; set; }
 
+        public int MovieId { get; set; }
+        public Movie Movie { get; set; }
     }
 }

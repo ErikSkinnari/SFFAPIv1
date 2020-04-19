@@ -20,7 +20,7 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Identity.Register)]
-        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
+        public async Task<IActionResult> Register([FromBody] UserRegistrationRequestDto request)
         {
             // Email validation
             if(ModelState.IsValid == false)
@@ -48,7 +48,7 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Identity.Login)]
-        public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequestDto request)
         {
             var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
 

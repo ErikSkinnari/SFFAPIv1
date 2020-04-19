@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient.DataClassification;
 
 namespace SFFApi
 {
@@ -44,6 +45,8 @@ namespace SFFApi
             // Repositorys
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IStudioService, StudioService>();
+            services.AddScoped<ILabelService, LabelService>();
+
 
             services.AddControllersWithViews();
 

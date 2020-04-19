@@ -40,7 +40,7 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPut(ApiRoutes.Movies.Update)]
-        public async Task<IActionResult> Update([FromRoute]Guid Id, UpdateMovieRequest request)
+        public async Task<IActionResult> Update([FromRoute]Guid Id, UpdateMovieRequestDto request)
         {
             var movie = new Movie
             {
@@ -78,7 +78,7 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Movies.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateMovieRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateMovieRequestDto request)
         {
             var movie = _movieService.CreateMovieFromRequest(request);
 

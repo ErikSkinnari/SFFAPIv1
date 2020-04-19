@@ -25,7 +25,7 @@ namespace SFFApi.Services
             return created > 0;
         }
 
-        public Studio CreateStudioFromRequest(CreateStudioRequest request)
+        public Studio CreateStudioFromRequest(CreateStudioRequestDto request)
         {
             var studio = new Studio
             {

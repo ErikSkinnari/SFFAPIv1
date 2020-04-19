@@ -34,5 +34,11 @@ namespace SFFApi.Contracts.V1
             public const string Login = Base + "/identity/login";
             public const string Register = Base + "/identity/register";
         }
+
+        public static class Label
+        {
+            public const string Simple = Base + "/label/basic";
+            public const string Detailed = Base + "/label/full";
+        }
     }
 }
