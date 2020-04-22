@@ -17,5 +17,6 @@ namespace SFFApi.Services
         Task<bool> UpdateStudioAsync(Studio studioToUpdate);
         Task<bool> DeleteStudioAsync(Guid studioId);
         Task<Studio> CreateStudioFromRequest(CreateStudioRequest request);
+        Task<ICollection<MovieResponse>> ListMovies(Guid studioId);
     }
 }

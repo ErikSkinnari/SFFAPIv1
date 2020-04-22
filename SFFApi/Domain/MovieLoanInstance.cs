@@ -9,7 +9,7 @@ namespace SFFApi.Domain
     {
         public int Id { get; set; }
         public Guid MovieLoanInstanceId { get; set; }
-        public bool Returned { get; set; } = false;
+        public bool IsReturned { get; set; } = false;
 
         public int MovieId { get; set; }
         public Movie Movie { get; set; }    

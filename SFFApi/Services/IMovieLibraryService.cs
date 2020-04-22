@@ -8,10 +8,10 @@ namespace SFFApi.Domain
 {
     public interface IMovieLibraryService
     {
-        Task<bool> AddMovieToLibrary(Movie movie);
-        Task<bool> EditMovieInLibrary(Movie movie);
-        Task<bool> RemoveMovieFromLibrary(Movie movie);
-        Task<bool> LoanRequest(MovieLoanRequest request);
-        Task<bool> ReturnRequest(MovieLoanRequest request);
+        Task<bool> AddMovieToLibraryAsync(AddMovieToLibraryRequest movie);
+        Task<bool> EditMovieInLibraryAsync(UpdateMovieInLibrary movieToUpdate);
+        Task<bool> RemoveMovieFromLibraryAsync(Guid libraryObjectId);
+        Task<bool> LoanRequestAsync(MovieLoanRequest request);
+        Task<bool> ReturnRequestAsync(MovieLoanRequest request);
     }
 }

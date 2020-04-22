@@ -18,8 +18,8 @@ namespace SFFApi.Contracts.V1
             public const string Create =    Base + "/movies";
             public const string Update =    Base + "/movies/{Id}";
             public const string Delete =    Base + "/movies/{Id}";
-            public const string Loan =      Base + "/movies/request/{movieId}/{studioId}"; // TODO use
-            public const string Return =    Base + "/movies/return/{movieId}/{studioId}"; // TODO use
+            public const string Loan =      Base + "/movies/{movieId}/request/{studioId}";
+            public const string Return =    Base + "/movies/{movieId}/return/{studioId}";
         }
 
         public static class Studios
@@ -29,7 +29,7 @@ namespace SFFApi.Contracts.V1
             public const string Create =    Base + "/studios";
             public const string Update =    Base + "/studios/{Id}";
             public const string Delete =    Base + "/studios/{Id}";
-            public const string ListMovies = Base + "/studios/{studioId}"; // TODO use
+            public const string ListMovies = Base + "/studios/{studioId}/movies";
         }
 
         public static class Identity
@@ -40,14 +40,15 @@ namespace SFFApi.Contracts.V1
 
         public static class Library
         {
-            
-            public const string MovieManager = Base + "/library/{movieId}"; // TODO use
+            public const string Create =    Base + "/library/add/{movieId},{licenseLimit}";
+            public const string Update =    Base + "/library/{Id}";
+            public const string Delete =    Base + "/library/{Id}";
         }
 
         public static class Label
         {
-            public const string Simple = Base + "/label/basic/{movieId}/{studioId}";
-            public const string Detailed = Base + "/label/full/{movieId}/{studioId}";
+            public const string Simple = Base + "/label/basic/{loanId}";
+            public const string Detailed = Base + "/label/full/{loanId}";
         }
 
         public static class Trivia

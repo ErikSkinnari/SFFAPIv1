@@ -11,6 +11,6 @@ namespace SFFApi.Domain
         public Guid MovieId { get; set; }
         public string Title { get; set; }
 
-        public ICollection<Score> Scores { get; set; }
+        public ICollection<Rating> Scores { get; set; }
     }
 }

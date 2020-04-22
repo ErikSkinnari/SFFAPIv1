@@ -99,5 +99,18 @@ namespace SFFApi.Controllers.V1
 
             return Created(locationUri, response);
         }
+
+        [HttpGet(ApiRoutes.Studios.ListMovies)]
+        public async Task<IActionResult> ListMovies([FromBody]Guid studioId)
+        {
+            var response = await _studioService.ListMovies(studioId);
+            
+            if(response == null)
+            {
+                return NotFound(new { Error = "No movies found on that studio" });
+            }
+
+            return Ok(response);
+        }
     }
 }

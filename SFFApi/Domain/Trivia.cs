@@ -7,7 +7,7 @@ namespace SFFApi.Domain
 {
     public class Trivia
     {
-        public int Id { get; set; }
+        public int Id { get; set; }        
         public string TriviaText { get; set; }
 
         public int MovieId { get; set; }

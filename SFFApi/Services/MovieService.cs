@@ -21,7 +21,6 @@ namespace SFFApi.Services
             _dataContext = dataContext;
             _movieLibraryService = movieLibraryService;
         }
-
         public async Task<List<Movie>> GetMoviesAsync()
         {
             return await _dataContext.Movies.ToListAsync();
@@ -57,7 +56,7 @@ namespace SFFApi.Services
         {
             _dataContext.Movies.Update(movieToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
-            return updated > 0; // If anything was changed return true.
+            return updated > 0;
         }
 
         public Movie CreateMovieFromRequest(CreateMovieRequest request)
@@ -69,40 +68,6 @@ namespace SFFApi.Services
             };
 
             return movie;
-        }
-
-        // Request a movie to loan
-        public async Task<MovieResponse> LoanRequest(MovieLoanRequest request)
-        {
-            var movieAvaliable = await _movieLibraryService.LoanRequest(request);
-
-            if(movieAvaliable == false)
-            {
-                return null;
-            }
-
-            return new MovieResponse
-            {
-                MovieId = request.Movie.MovieId,
-                Title = request.Movie.Title
-            };
-        }
-
-        // Return movie to library after loan
-        public async Task<MovieResponse> ReturnRequest(MovieLoanRequest request)
-        {
-            var loanInstance = await _dataContext.MovieLoans.SingleOrDefaultAsync(x => x.Movie.MovieId == request.Movie.MovieId && x.Studio.StudioId == request.Studio.StudioId);
-
-            if(loanInstance == null)
-            {
-                return null;
-            }
-
-            return new MovieResponse
-            {
-                MovieId = request.Movie.MovieId,
-                Title = request.Movie.Title
-            };
         }
     }
 }

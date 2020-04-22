@@ -74,7 +74,7 @@ namespace SFFApi.Services
             var studio = await _dataContext.Studios.SingleOrDefaultAsync(x => x.StudioId == studioId);
             var address = await _dataContext.Addresses.SingleOrDefaultAsync(x => x.Id == studio.AddressId);
 
-            var response = new StudioResponse
+            var response = new StudioResponse // TODO Refactor
             {
                 Name = studio.Name,
                 AddressLine1 = address.AddressLine1,
@@ -102,6 +102,19 @@ namespace SFFApi.Services
             _dataContext.Studios.Update(studioToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
             return updated > 0;
+        }
+
+        public async Task<ICollection<MovieResponse>> ListMovies(Guid studioId)
+        {
+            var movieList = await (from loan in _dataContext.MovieLoans
+                                   join movie in _dataContext.Movies on loan.Movie.Id equals movie.Id
+                                   where loan.Studio.StudioId == studioId
+                                   select new MovieResponse
+                                   {
+                                       MovieId = movie.MovieId,
+                                       Title = movie.Title
+                                   }).ToListAsync();
+            return movieList;
         }
     }
 }

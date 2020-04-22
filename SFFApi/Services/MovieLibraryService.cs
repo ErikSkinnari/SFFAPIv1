@@ -19,17 +19,48 @@ namespace SFFApi.Domain
             MovieLibraryObjects = _dataContext.MovieLibrary.ToList();
         }
 
-        public async Task<bool> AddMovieToLibrary(Movie movie)
+        public async Task<bool> AddMovieToLibraryAsync(AddMovieToLibraryRequest request)
         {
-            throw new NotImplementedException();
+            var IsAlreadyInLibrary = await _dataContext.MovieLibrary.FirstOrDefaultAsync(x => x.MovieId == request.MovieId);
+
+            if (IsAlreadyInLibrary != null)
+            {
+                return false;
+            }
+
+            var movieLibraryObject = new MovieLibraryObject
+            {
+                MovieId = request.MovieId,
+                LicenseLimit = request.LicenseLimit,
+                Avaliable = request.LicenseLimit
+            };
+
+            _dataContext.MovieLibrary.Add(movieLibraryObject);
+
+            var added = await _dataContext.SaveChangesAsync();
+
+            return added > 0;
         }
 
-        public async Task<bool> EditMovieInLibrary(Movie movie)
+        public async Task<bool> EditMovieInLibraryAsync(UpdateMovieInLibrary movieToUpdate)
         {
-            throw new NotImplementedException();
+            var IsAlreadyInLibrary = await _dataContext.MovieLibrary.FirstOrDefaultAsync(x => x.MovieId == movieToUpdate.MovieObjectId);
+
+            if (IsAlreadyInLibrary == null)
+            {
+                return false;
+            }
+
+            IsAlreadyInLibrary.LicenseLimit = movieToUpdate.LicenseLimit;
+
+            _dataContext.MovieLibrary.Update(IsAlreadyInLibrary);
+
+            var updateSuccess = await _dataContext.SaveChangesAsync();
+
+            return updateSuccess > 0;
         }
 
-        public async Task<bool> LoanRequest(MovieLoanRequest request)
+        public async Task<bool> LoanRequestAsync(MovieLoanRequest request)
         {
             var requestedMovie = await _dataContext.MovieLibrary.SingleOrDefaultAsync(m => m.MovieId == request.Movie.MovieId);
             if(requestedMovie.Avaliable > 1)
@@ -51,7 +82,7 @@ namespace SFFApi.Domain
             return created > 0;
         }
 
-        public async Task<bool> ReturnRequest(MovieLoanRequest request)
+        public async Task<bool> ReturnRequestAsync(MovieLoanRequest request)
         {
             var movieLoanToReturn = await _dataContext.MovieLoans.SingleOrDefaultAsync(m => m.Movie.MovieId == request.Movie.MovieId && m.Studio.StudioId == request.Studio.StudioId);
             var requestedMovieLibraryInstance = await _dataContext.MovieLibrary.SingleOrDefaultAsync(m => m.MovieId == request.Movie.MovieId);
@@ -61,18 +92,25 @@ namespace SFFApi.Domain
                 return false;
             }
 
-            movieLoanToReturn.TimeOfReturn = DateTime.Now; // Set time of return
-            requestedMovieLibraryInstance.Avaliable++; // Add one to the avaliable movies.
+            movieLoanToReturn.IsReturned = true;
+            movieLoanToReturn.TimeOfReturn = DateTime.Now;
+            requestedMovieLibraryInstance.Avaliable++;
 
             var created = await _dataContext.SaveChangesAsync();
             return created > 0;
         }
 
-        public Task<bool> RemoveMovieFromLibrary(Movie movie)
+        public async Task<bool> RemoveMovieFromLibraryAsync(Guid movieId)
         {
-            throw new NotImplementedException();
-        }
+            var movieToRemove = await _dataContext.MovieLibrary.SingleOrDefaultAsync(m => m.MovieId == movieId);
+            if (movieToRemove == null)
+            {
+                return false;
+            }            
 
-        
+            _dataContext.MovieLibrary.Remove(movieToRemove);
+            var deleted = await _dataContext.SaveChangesAsync();
+            return deleted > 0;
+        }        
     }
 }

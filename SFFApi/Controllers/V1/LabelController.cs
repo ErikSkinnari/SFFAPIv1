@@ -22,9 +22,12 @@ namespace SFFApi.Controllers.V1
         /// </summary>
         [HttpGet(ApiRoutes.Label.Simple)]
         [Produces("application/xml")]
-        public async Task<ActionResult<EtikettData>> GetLabelSimple([FromRoute]Guid movieId, [FromRoute]Guid studioId)
+        public async Task<ActionResult<EtikettData>> GetLabelSimple([FromRoute]Guid loanId)
         {
-            var request = new LabelRequest(movieId, studioId);
+            var request = new LabelRequest
+            {
+                LoanId = loanId
+            };
 
             var response = await _labelService.GetSimpleLabel(request);
             return Ok(response);
@@ -35,9 +38,12 @@ namespace SFFApi.Controllers.V1
         /// </summary>
         [HttpGet(ApiRoutes.Label.Detailed)]
         [Produces("application/xml")]
-        public async Task<ActionResult<LabelDetailedResponse>> GetLabelDetailed([FromRoute]Guid movieId ,Guid studioId)
+        public async Task<ActionResult<LabelDetailedResponse>> GetLabelDetailed([FromRoute]Guid loanId)
         {
-            var request = new LabelRequest(movieId, studioId);
+            var request = new LabelRequest
+            {
+                LoanId = loanId
+            };
             
             var response = await _labelService.GetDetailedLabel(request);
             return Ok(response);
