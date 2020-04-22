@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace SFFApi.Domain
 {
-    public class Movie
+    public class MovieLibraryObject
     {
         public int Id { get; set; }
         public Guid MovieId { get; set; }
-        public string Title { get; set; }
-
-        public ICollection<Score> Scores { get; set; }
+        public int Avaliable { get; set; }
+        public int LicenseLimit { get; set; }
     }
 }

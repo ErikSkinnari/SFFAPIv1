@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SFFApi.Contracts.V1.Requests;
+using SFFApi.Contracts.V1.Responses;
 using SFFApi.Data;
 using SFFApi.Domain;
 using System;
@@ -12,10 +14,12 @@ namespace SFFApi.Services
     public class MovieService : IMovieService
     {
         private readonly DataContext _dataContext;
+        private readonly IMovieLibraryService _movieLibraryService;
 
-        public MovieService(DataContext dataContext)
+        public MovieService(DataContext dataContext, IMovieLibraryService movieLibraryService)
         {
             _dataContext = dataContext;
+            _movieLibraryService = movieLibraryService;
         }
 
         public async Task<List<Movie>> GetMoviesAsync()
@@ -44,9 +48,9 @@ namespace SFFApi.Services
             return deleted > 0; 
         }
 
-        public async Task<Movie> GetMovieByIdAsync(Guid movieId)
+        public async Task<Movie> GetMovieByIdAsync(Guid MovieId)
         {
-            return await _dataContext.Movies.SingleOrDefaultAsync(x => x.MovieId == movieId);
+            return await _dataContext.Movies.SingleOrDefaultAsync(x => x.MovieId == MovieId);
         }        
 
         public async Task<bool> UpdateMovieAsync(Movie movieToUpdate)
@@ -56,7 +60,7 @@ namespace SFFApi.Services
             return updated > 0; // If anything was changed return true.
         }
 
-        public Movie CreateMovieFromRequest(CreateMovieRequestDto request)
+        public Movie CreateMovieFromRequest(CreateMovieRequest request)
         {
             var movie = new Movie
             {
@@ -65,6 +69,40 @@ namespace SFFApi.Services
             };
 
             return movie;
+        }
+
+        // Request a movie to loan
+        public async Task<MovieResponse> LoanRequest(MovieLoanRequest request)
+        {
+            var movieAvaliable = await _movieLibraryService.LoanRequest(request);
+
+            if(movieAvaliable == false)
+            {
+                return null;
+            }
+
+            return new MovieResponse
+            {
+                MovieId = request.Movie.MovieId,
+                Title = request.Movie.Title
+            };
+        }
+
+        // Return movie to library after loan
+        public async Task<MovieResponse> ReturnRequest(MovieLoanRequest request)
+        {
+            var loanInstance = await _dataContext.MovieLoans.SingleOrDefaultAsync(x => x.Movie.MovieId == request.Movie.MovieId && x.Studio.StudioId == request.Studio.StudioId);
+
+            if(loanInstance == null)
+            {
+                return null;
+            }
+
+            return new MovieResponse
+            {
+                MovieId = request.Movie.MovieId,
+                Title = request.Movie.Title
+            };
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SFFApi.Controllers.V1
         [HttpGet(ApiRoutes.Studios.Get)]
         public async Task<IActionResult> Get([FromRoute]Guid Id)
         {
-            var response = await _studioService.GetStudioByIdAsync(Id);
+            var response = await _studioService.GetStudioResponseByIdAsync(Id);
 
             if (response == null) return NotFound();
 
@@ -39,10 +39,10 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPut(ApiRoutes.Studios.Update)]
-        public async Task<IActionResult> Update([FromRoute]Guid Id, UpdateStudioRequestDto request)
+        public async Task<IActionResult> Update([FromRoute]Guid Id, UpdateStudioRequest request)
         {
             var oldStudio = await _studioService.GetStudioByIdAsync(Id);
-            var studio = new Studio
+            var studio = new Studio // TODO Move to Service!!!
             {
                 StudioId = Id,
                 Name = request.Name ?? oldStudio.Name,
@@ -82,9 +82,9 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Studios.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateStudioRequestDto request)
+        public async Task<IActionResult> Create([FromBody] CreateStudioRequest request)
         {
-            var studio = _studioService.CreateStudioFromRequest(request);
+            var studio = await _studioService.CreateStudioFromRequest(request);
 
             var success = await _studioService.AddStudioAsync(studio);
             if (!success)

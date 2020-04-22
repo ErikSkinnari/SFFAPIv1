@@ -8,7 +8,7 @@ namespace SFFApi.Extensions
 {
     public static class ExtensionMethods
     {
-        // Extension method to check if user is admin
+        // Extension method to check if user is admin. Not entirely used so far. 
         public static bool IsAdmin(this HttpContext httpContext)
         {
             if(httpContext.User == null)

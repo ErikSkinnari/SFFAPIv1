@@ -1,4 +1,5 @@
 ﻿using SFFApi.Contracts.V1.Requests;
+using SFFApi.Contracts.V1.Responses;
 using SFFApi.Domain;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace SFFApi.Services
 {
     public interface ILabelService
     {
-        Task<ILabel> GetSimpleLabel(LabelRequest request);
-        Task<ILabel> GetDetailedLable(LabelRequest request);
+        Task<EtikettData> GetSimpleLabel(LabelRequest request);
+        Task<LabelDetailedResponse> GetDetailedLabel(LabelRequest request);
     }
 }

@@ -7,7 +7,15 @@ namespace SFFApi.Contracts.V1.Requests
 {
     public class LabelRequest
     {
-        public Guid MovieId { get; set; }
-        public Guid StudioId { get; set; }
+        public Guid LoanId { get; set; }
+
+        //public Guid MovieId { get; set; }
+        //public Guid StudioId { get; set; }
+
+        //public LabelRequest(Guid movieId, Guid studioId)
+        //{
+        //    MovieId = movieId;
+        //    StudioId = studioId;
+        //}
     }
 }

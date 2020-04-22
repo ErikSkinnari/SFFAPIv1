@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SFFApi.Data;
 
 namespace SFFApi.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200421092829_UpdatedModels")]
+    partial class UpdatedModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -261,27 +263,6 @@ namespace SFFApi.Data.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("SFFApi.Domain.MovieLibraryObject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Avaliable")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LicenseLimit")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("MovieId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MovieLibrary");
-                });
-
             modelBuilder.Entity("SFFApi.Domain.MovieLoanInstance", b =>
                 {
                     b.Property<int>("Id")
@@ -291,9 +272,6 @@ namespace SFFApi.Data.Migrations
 
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Returned")
-                        .HasColumnType("bit");
 
                     b.Property<int>("StudioId")
                         .HasColumnType("int");

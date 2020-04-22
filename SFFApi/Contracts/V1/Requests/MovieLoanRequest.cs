@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SFFApi.Contracts.V1.Requests
 {
-    public class MovieLoanRequestDto
+    public class MovieLoanRequest
     {
-        public Movie Movie{ get; set; }
+        public Movie Movie { get; set; }
         public Studio Studio { get; set; }
     }
 }

@@ -10,6 +10,5 @@ namespace SFFApi.Domain
         public string Token { get; set; }
         public bool Success { get; set; }
         public IEnumerable<string> ErrorMessages { get; set; }
-
     }
 }

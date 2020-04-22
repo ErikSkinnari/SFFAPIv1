@@ -1,5 +1,8 @@
-﻿using SFFApi.Contracts.V1.Requests;
+﻿using Microsoft.EntityFrameworkCore;
+using SFFApi.Contracts.V1;
+using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
+using SFFApi.Data;
 using SFFApi.Domain;
 using System;
 using System.Collections.Generic;
@@ -12,29 +15,66 @@ namespace SFFApi.Services
 {
     public class LabelService : ILabelService
     {
-        private IMovieService _movieService;
-        private IStudioService _studioService;
+        private readonly DataContext _dataContext;
 
-        public LabelService(IMovieService movieService, IStudioService studioService)
+        public LabelService(DataContext dataContext)
         {
-            _movieService = movieService;
-            _studioService = studioService;
+            _dataContext = dataContext;
         }
 
-        public async Task<ILabel> GetDetailedLable(LabelRequest request)
+        public async Task<LabelDetailedResponse> GetDetailedLabel(LabelRequest request)
         {
-            var movie = await _movieService.GetMovieByIdAsync(request.MovieId);
-            var studio = await _studioService.GetStudioByIdAsync(request.StudioId);
+            var label = await (from loan in _dataContext.MovieLoans
+                                 join movie in _dataContext.Movies on loan.Movie.Id equals movie.Id
+                                 join studio in _dataContext.Studios on loan.Studio.Id equals studio.Id
+                                 join address in _dataContext.Addresses on studio.AddressId equals address.Id
+                                 where loan.MovieLoanInstanceId == request.LoanId
+                                 select new LabelDetailedResponse
+                                 {
+                                     Recipient = studio.Name,
+                                     AddressLine1 = address.AddressLine1,
+                                     AddressLine2 = address.AddressLine2,
+                                     ZipCode = address.ZipCode,
+                                     City = address.City,
+                                     Content = "Movie title: " + movie.Title + " MovieId: " + movie.MovieId,
+                                     DispatchDate = DateTime.Now
+                                 }).FirstOrDefaultAsync();
 
-            return new XmlLabelResponse(movie, studio);
+            return label;
+
+            // The old way. Without Linq.
+
+            //var movie = await _movieService.GetMovieByIdAsync(request.MovieId);
+            //var studio = await _studioService.GetStudioByIdAsync(request.StudioId);
+            //var address = await _dataContext.Addresses.SingleOrDefaultAsync(a => a.Id == studio.AddressId);
+
+            //var label = new LabelDetailedResponse
+            //{
+            //    Recipient = studio.Name,
+            //    AddressLine1 = address.AddressLine1,
+            //    AddressLine2 = address.AddressLine2,
+            //    ZipCode = address.ZipCode,
+            //    City = address.City,
+            //    Content = "Movie title: " + movie.Title + " MovieId: " + movie.MovieId,
+            //    DispatchDate = DateTime.Now
+            //};
         }
 
-        public async Task<ILabel> GetSimpleLabel(LabelRequest request)
+        public async Task<EtikettData> GetSimpleLabel(LabelRequest request)
         {
-            var movie = await _movieService.GetMovieByIdAsync(request.MovieId);
-            var studio = await _studioService.GetStudioByIdAsync(request.StudioId);
+            var label = await (from loan in _dataContext.MovieLoans
+                               join movie in _dataContext.Movies on loan.Movie.Id equals movie.Id
+                               join studio in _dataContext.Studios on loan.Studio.Id equals studio.Id
+                               join address in _dataContext.Addresses on studio.AddressId equals address.Id
+                               where loan.MovieLoanInstanceId == request.LoanId
+                               select new EtikettData
+                               {
+                                   FilmNamn = movie.Title,
+                                   Ort = address.City,
+                                   Datum = DateTime.Now
+                               }).FirstOrDefaultAsync();
 
-            return new EtikettData(movie, studio);
+            return label;
         }
     }
 }

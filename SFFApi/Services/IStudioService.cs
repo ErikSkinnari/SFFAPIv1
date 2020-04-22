@@ -1,4 +1,5 @@
 ﻿using SFFApi.Contracts.V1.Requests;
+using SFFApi.Contracts.V1.Responses;
 using SFFApi.Domain;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,9 @@ namespace SFFApi.Services
         Task<bool> AddStudioAsync(Studio studioToAdd);
         Task<List<Studio>> GetStudiosAsync();
         Task<Studio> GetStudioByIdAsync(Guid studioId);
+        Task<StudioResponse> GetStudioResponseByIdAsync(Guid studioId);
         Task<bool> UpdateStudioAsync(Studio studioToUpdate);
         Task<bool> DeleteStudioAsync(Guid studioId);
-        Studio CreateStudioFromRequest(CreateStudioRequestDto request);
+        Task<Studio> CreateStudioFromRequest(CreateStudioRequest request);
     }
 }

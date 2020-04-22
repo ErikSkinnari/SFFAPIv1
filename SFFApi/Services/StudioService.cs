@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SFFApi.Contracts.V1.Requests;
+using SFFApi.Contracts.V1.Responses;
 using SFFApi.Data;
 using SFFApi.Domain;
 using System;
@@ -25,19 +27,30 @@ namespace SFFApi.Services
             return created > 0;
         }
 
-        public Studio CreateStudioFromRequest(CreateStudioRequestDto request)
+        public async Task<Studio> CreateStudioFromRequest(CreateStudioRequest request)
         {
+            var address = new Address
+            {
+                AddressLine1 = request.AddressLine1,
+                AddressLine2 = request.AddressLine2,
+                ZipCode = request.ZipCode,
+                City = request.City
+            };
+
+            // Save address to DB
+            await _dataContext.Addresses.AddAsync(address);
+            var addressCreated = await _dataContext.SaveChangesAsync();
+            if (addressCreated < 1)
+            {
+                // TODO Exeption if address is not properly saved. 
+                return null;
+            }
+
             var studio = new Studio
             {
                 StudioId = Guid.NewGuid(),
                 Name = request.Name,
-                Address = new Address
-                {
-                    AddressLine1 = request.AddressLine1,
-                    AddressLine2 = request.AddressLine2,
-                    ZipCode = request.ZipCode,
-                    City = request.City
-                }
+                Address = address
             };
 
             return studio;
@@ -54,6 +67,24 @@ namespace SFFApi.Services
             _dataContext.Studios.Remove(studio);
             var deleted = await _dataContext.SaveChangesAsync();
             return deleted > 0;
+        }
+
+        public async Task<StudioResponse> GetStudioResponseByIdAsync(Guid studioId)
+        {
+            var studio = await _dataContext.Studios.SingleOrDefaultAsync(x => x.StudioId == studioId);
+            var address = await _dataContext.Addresses.SingleOrDefaultAsync(x => x.Id == studio.AddressId);
+
+            var response = new StudioResponse
+            {
+                Name = studio.Name,
+                AddressLine1 = address.AddressLine1,
+                AddressLine2 = address.AddressLine2,
+                ZipCode = address.ZipCode,
+                City = address.City,
+                StudioId = studio.StudioId
+            };
+
+            return response;
         }
 
         public async Task<Studio> GetStudioByIdAsync(Guid studioId)

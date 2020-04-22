@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient.DataClassification;
+using SFFApi.Domain;
 
 namespace SFFApi
 {
@@ -46,12 +47,12 @@ namespace SFFApi
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IStudioService, StudioService>();
             services.AddScoped<ILabelService, LabelService>();
+            services.AddScoped<IMovieLibraryService, MovieLibraryService>();
 
-
-            services.AddControllersWithViews();
+            services.AddControllers()
+                .AddXmlSerializerFormatters();
 
             // Authentication
-
             services.AddScoped<IIdentityService, IdentityService>();
 
             var jwtSettings = new JwtOptions();
@@ -126,9 +127,7 @@ namespace SFFApi
                 options.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description);
             });
 
-
             app.UseHttpsRedirection();
-            //app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -139,10 +138,6 @@ namespace SFFApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapControllerRoute(
-                //    name: "default",
-                //    pattern: "{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapRazorPages();
             });
         }
     }

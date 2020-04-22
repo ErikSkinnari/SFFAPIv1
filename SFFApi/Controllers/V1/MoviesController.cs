@@ -40,7 +40,7 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPut(ApiRoutes.Movies.Update)]
-        public async Task<IActionResult> Update([FromRoute]Guid Id, UpdateMovieRequestDto request)
+        public async Task<IActionResult> Update([FromRoute]Guid Id, UpdateMovieRequest request)
         {
             var movie = new Movie
             {
@@ -78,7 +78,7 @@ namespace SFFApi.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Movies.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateMovieRequestDto request)
+        public async Task<IActionResult> Create([FromBody] CreateMovieRequest request)
         {
             var movie = _movieService.CreateMovieFromRequest(request);
 
@@ -94,6 +94,32 @@ namespace SFFApi.Controllers.V1
             var response = new MovieResponse { MovieId = movie.MovieId, Title = movie.Title };
 
             return Created(locationUri, response);
+        }
+
+        [HttpGet(ApiRoutes.Movies.Loan)]
+        public async Task<ActionResult<MovieResponse>> LoanRequest(MovieLoanRequest request)
+        {
+            var response = await _movieService.LoanRequest(request);
+
+            if (response == null)
+            {
+                return NotFound(new { Error = "No movie avaliable for the moment" });
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet(ApiRoutes.Movies.Return)]
+        public async Task<ActionResult> ReturnRequest(MovieLoanRequest request)
+        {
+            var response = await _movieService.ReturnRequest(request);
+
+            if (response == null)
+            {
+                return NotFound(new { Error = "Loan not active" });
+            }
+
+            return Ok(new { Success = "Movie returned" });
         }
     }
 }
