@@ -1,10 +1,11 @@
 ﻿using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
-using SFFApi.Domain;
+using SFFApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFFApi.Domain;
 
 namespace SFFApi.Services
 {

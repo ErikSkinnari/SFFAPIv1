@@ -3,7 +3,7 @@ using SFFApi.Contracts.V1;
 using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
 using SFFApi.Data;
-using SFFApi.Domain;
+using SFFApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +22,13 @@ namespace SFFApi.Services
             _dataContext = dataContext;
         }
 
-        public async Task<LabelDetailedResponse> GetDetailedLabel(LabelRequest request)
+        public async Task<LabelDetailedResponse> GetDetailedLabel(Guid loanId)
         {
             var label = await (from loan in _dataContext.MovieLoans
                                  join movie in _dataContext.Movies on loan.Movie.Id equals movie.Id
                                  join studio in _dataContext.Studios on loan.Studio.Id equals studio.Id
                                  join address in _dataContext.Addresses on studio.AddressId equals address.Id
-                                 where loan.MovieLoanInstanceId == request.LoanId
+                                 where loan.MovieLoanInstanceGuid == loanId
                                  select new LabelDetailedResponse
                                  {
                                      Recipient = studio.Name,
@@ -36,7 +36,7 @@ namespace SFFApi.Services
                                      AddressLine2 = address.AddressLine2,
                                      ZipCode = address.ZipCode,
                                      City = address.City,
-                                     Content = "Movie title: " + movie.Title + " MovieId: " + movie.MovieId,
+                                     Content = "Movie title: " + movie.Title + " MovieId: " + movie.MovieGuid,
                                      DispatchDate = DateTime.Now
                                  }).FirstOrDefaultAsync();
 
@@ -60,13 +60,13 @@ namespace SFFApi.Services
             //};
         }
 
-        public async Task<EtikettData> GetSimpleLabel(LabelRequest request)
+        public async Task<EtikettData> GetSimpleLabel(Guid loanId)
         {
             var label = await (from loan in _dataContext.MovieLoans
                                join movie in _dataContext.Movies on loan.Movie.Id equals movie.Id
                                join studio in _dataContext.Studios on loan.Studio.Id equals studio.Id
                                join address in _dataContext.Addresses on studio.AddressId equals address.Id
-                               where loan.MovieLoanInstanceId == request.LoanId
+                               where loan.MovieLoanInstanceGuid == loanId
                                select new EtikettData
                                {
                                    FilmNamn = movie.Title,

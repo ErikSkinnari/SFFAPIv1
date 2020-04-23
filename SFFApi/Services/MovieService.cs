@@ -14,12 +14,10 @@ namespace SFFApi.Services
     public class MovieService : IMovieService
     {
         private readonly DataContext _dataContext;
-        private readonly IMovieLibraryService _movieLibraryService;
 
-        public MovieService(DataContext dataContext, IMovieLibraryService movieLibraryService)
+        public MovieService(DataContext dataContext)
         {
             _dataContext = dataContext;
-            _movieLibraryService = movieLibraryService;
         }
         public async Task<List<Movie>> GetMoviesAsync()
         {
@@ -49,7 +47,7 @@ namespace SFFApi.Services
 
         public async Task<Movie> GetMovieByIdAsync(Guid MovieId)
         {
-            return await _dataContext.Movies.SingleOrDefaultAsync(x => x.MovieId == MovieId);
+            return await _dataContext.Movies.SingleOrDefaultAsync(x => x.MovieGuid == MovieId);
         }        
 
         public async Task<bool> UpdateMovieAsync(Movie movieToUpdate)
@@ -63,7 +61,7 @@ namespace SFFApi.Services
         {
             var movie = new Movie
             {
-                MovieId = Guid.NewGuid(),
+                MovieGuid = Guid.NewGuid(),
                 Title = request.Title
             };
 

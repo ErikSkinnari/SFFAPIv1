@@ -8,10 +8,14 @@ namespace SFFApi.Domain
 {
     public class Rating
     {
+        [Key]
         public int Id { get; set; }
+        public Guid RatingGuid { get; set; }
 
         [Range(1,5, ErrorMessage = "Rating must be between 1 and 5")]
         public int Score { get; set; }
+        public DateTime TimeOfRating { get; set; }
+
 
         public int StudioId { get; set; }
         public Studio Studio { get; set; }

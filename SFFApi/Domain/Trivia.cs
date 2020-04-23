@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +8,9 @@ namespace SFFApi.Domain
 {
     public class Trivia
     {
-        public int Id { get; set; }        
+        [Key]
+        public int Id { get; set; }
+        public Guid TriviaGuid { get; set; }
         public string TriviaText { get; set; }
 
         public int MovieId { get; set; }

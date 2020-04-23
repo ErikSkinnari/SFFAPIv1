@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SFFApi.Data;
 
 namespace SFFApi.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200422204057_update")]
+    partial class update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -382,9 +384,6 @@ namespace SFFApi.Data.Migrations
 
                     b.Property<int>("StudioId")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("TriviaGuid")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TriviaText")
                         .HasColumnType("nvarchar(max)");

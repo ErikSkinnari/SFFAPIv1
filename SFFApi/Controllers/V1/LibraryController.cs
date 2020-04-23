@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using SFFApi.Contracts.V1;
 using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
-using SFFApi.Domain;
 using SFFApi.Extensions;
 using SFFApi.Services;
 
@@ -24,7 +20,7 @@ namespace SFFApi.Controllers.V1
             _movieLibraryService = movieLibraryService;
         }
 
-        [HttpGet(ApiRoutes.Movies.Loan)]
+        [HttpGet(ApiRoutes.Library.Loan)]
         public async Task<ActionResult<MovieResponse>> LoanRequest(MovieLoanRequest request)
         {
             var response = await _movieLibraryService.LoanRequestAsync(request);
@@ -37,7 +33,7 @@ namespace SFFApi.Controllers.V1
             return Ok(new { Success = "Movie loan registered" });
         }
 
-        [HttpGet(ApiRoutes.Movies.Return)]
+        [HttpGet(ApiRoutes.Library.Return)]
         public async Task<ActionResult> ReturnRequest(MovieLoanRequest request)
         {
             var response = await _movieLibraryService.ReturnRequestAsync(request);
@@ -67,11 +63,12 @@ namespace SFFApi.Controllers.V1
         public async Task<ActionResult> UpdateMovieInLibrary([FromRoute]Guid Id, int newLicenseLimit)
         {
             var response = await _movieLibraryService.EditMovieInLibraryAsync(
-                new UpdateMovieInLibrary 
-                { 
-                    MovieObjectId = Id, 
-                    LicenseLimit = newLicenseLimit 
+                new UpdateMovieInLibrary
+                {
+                    MovieObjectId = Id,
+                    LicenseLimit = newLicenseLimit
                 });
+
             if (response == false)
             {
                 return NotFound(new { Error = "Update Failed" });

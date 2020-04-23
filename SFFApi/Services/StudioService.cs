@@ -48,7 +48,7 @@ namespace SFFApi.Services
 
             var studio = new Studio
             {
-                StudioId = Guid.NewGuid(),
+                StudioGuid = Guid.NewGuid(),
                 Name = request.Name,
                 Address = address
             };
@@ -71,7 +71,7 @@ namespace SFFApi.Services
 
         public async Task<StudioResponse> GetStudioResponseByIdAsync(Guid studioId)
         {
-            var studio = await _dataContext.Studios.SingleOrDefaultAsync(x => x.StudioId == studioId);
+            var studio = await _dataContext.Studios.SingleOrDefaultAsync(x => x.StudioGuid == studioId);
             var address = await _dataContext.Addresses.SingleOrDefaultAsync(x => x.Id == studio.AddressId);
 
             var response = new StudioResponse // TODO Refactor
@@ -81,7 +81,7 @@ namespace SFFApi.Services
                 AddressLine2 = address.AddressLine2,
                 ZipCode = address.ZipCode,
                 City = address.City,
-                StudioId = studio.StudioId
+                StudioId = studio.StudioGuid
             };
 
             return response;
@@ -89,7 +89,7 @@ namespace SFFApi.Services
 
         public async Task<Studio> GetStudioByIdAsync(Guid studioId)
         {
-            return await _dataContext.Studios.SingleOrDefaultAsync(x => x.StudioId == studioId);
+            return await _dataContext.Studios.SingleOrDefaultAsync(x => x.StudioGuid == studioId);
         }
 
         public async Task<List<Studio>> GetStudiosAsync()
@@ -108,10 +108,10 @@ namespace SFFApi.Services
         {
             var movieList = await (from loan in _dataContext.MovieLoans
                                    join movie in _dataContext.Movies on loan.Movie.Id equals movie.Id
-                                   where loan.Studio.StudioId == studioId
+                                   where loan.Studio.StudioGuid == studioId
                                    select new MovieResponse
                                    {
-                                       MovieId = movie.MovieId,
+                                       MovieId = movie.MovieGuid,
                                        Title = movie.Title
                                    }).ToListAsync();
             return movieList;

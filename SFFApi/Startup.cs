@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -18,9 +15,6 @@ using SFFApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Data.SqlClient.DataClassification;
-using SFFApi.Domain;
 
 namespace SFFApi
 {
@@ -48,6 +42,7 @@ namespace SFFApi
             services.AddScoped<IStudioService, StudioService>();
             services.AddScoped<ILabelService, LabelService>();
             services.AddScoped<IMovieLibraryService, MovieLibraryService>();
+            services.AddScoped<IRatingService, RatingService>();
 
             services.AddControllers()
                 .AddXmlSerializerFormatters();

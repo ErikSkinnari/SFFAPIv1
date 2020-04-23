@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,8 +8,9 @@ namespace SFFApi.Domain
 {
     public class MovieLoanInstance
     {
+        [Key]
         public int Id { get; set; }
-        public Guid MovieLoanInstanceId { get; set; }
+        public Guid MovieLoanInstanceGuid { get; set; }
         public bool IsReturned { get; set; } = false;
 
         public int MovieId { get; set; }

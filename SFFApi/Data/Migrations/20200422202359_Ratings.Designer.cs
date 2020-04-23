@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SFFApi.Data;
 
 namespace SFFApi.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200422202359_Ratings")]
+    partial class Ratings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,7 +252,7 @@ namespace SFFApi.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<Guid>("MovieGuid")
+                    b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
@@ -295,7 +297,7 @@ namespace SFFApi.Data.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("MovieLoanInstanceGuid")
+                    b.Property<Guid>("MovieLoanInstanceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("StudioId")
@@ -326,7 +328,7 @@ namespace SFFApi.Data.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("RatingGuid")
+                    b.Property<Guid>("RatingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Score")
@@ -360,7 +362,7 @@ namespace SFFApi.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("StudioGuid")
+                    b.Property<Guid>("StudioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -382,9 +384,6 @@ namespace SFFApi.Data.Migrations
 
                     b.Property<int>("StudioId")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("TriviaGuid")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TriviaText")
                         .HasColumnType("nvarchar(max)");

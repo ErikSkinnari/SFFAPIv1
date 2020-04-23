@@ -1,4 +1,4 @@
-﻿using SFFApi.Domain;
+﻿using SFFApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ namespace SFFApi.Contracts.V1.Requests
 {
     public class MovieLoanRequest
     {
-        public Movie Movie { get; set; }
-        public Studio Studio { get; set; }
+        public Guid MovieId { get; set; }
+        public Guid StudioId { get; set; }
     }
 }

@@ -24,12 +24,7 @@ namespace SFFApi.Controllers.V1
         [Produces("application/xml")]
         public async Task<ActionResult<EtikettData>> GetLabelSimple([FromRoute]Guid loanId)
         {
-            var request = new LabelRequest
-            {
-                LoanId = loanId
-            };
-
-            var response = await _labelService.GetSimpleLabel(request);
+            var response = await _labelService.GetSimpleLabel(loanId);
             return Ok(response);
         }
 
@@ -40,12 +35,7 @@ namespace SFFApi.Controllers.V1
         [Produces("application/xml")]
         public async Task<ActionResult<LabelDetailedResponse>> GetLabelDetailed([FromRoute]Guid loanId)
         {
-            var request = new LabelRequest
-            {
-                LoanId = loanId
-            };
-            
-            var response = await _labelService.GetDetailedLabel(request);
+            var response = await _labelService.GetDetailedLabel(loanId);
             return Ok(response);
         }
     }

@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using SFFApi.Contracts.V1;
 using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
-using SFFApi.Domain;
-using SFFApi.Extensions;
 using SFFApi.Services;
+using SFFApi.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using SFFApi.Domain;
 
 namespace SFFApi.Controllers.V1
 {
@@ -44,7 +42,7 @@ namespace SFFApi.Controllers.V1
             var oldStudio = await _studioService.GetStudioByIdAsync(Id);
             var studio = new Studio // TODO Move to Service!!!
             {
-                StudioId = Id,
+                StudioGuid = Id,
                 Name = request.Name ?? oldStudio.Name,
                 Address = new Address
                 {
@@ -93,9 +91,9 @@ namespace SFFApi.Controllers.V1
             }
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var locationUri = baseUrl + "/" + ApiRoutes.Movies.Get.Replace("{Id}", studio.StudioId.ToString());
+            var locationUri = baseUrl + "/" + ApiRoutes.Movies.Get.Replace("{Id}", studio.StudioGuid.ToString());
 
-            var response = new StudioResponse { StudioId = studio.StudioId, Name = studio.Name };
+            var response = new StudioResponse { StudioId = studio.StudioGuid, Name = studio.Name };
 
             return Created(locationUri, response);
         }

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFFApi.Contracts.V1;
 using SFFApi.Contracts.V1.Requests;
 using SFFApi.Contracts.V1.Responses;
-using SFFApi.Domain;
-using SFFApi.Extensions;
 using SFFApi.Services;
+using SFFApi.Extensions;
+using SFFApi.Domain;
 
 namespace SFFApi.Controllers.V1
 {
@@ -44,7 +42,7 @@ namespace SFFApi.Controllers.V1
         {
             var movie = new Movie // TODO refactor
             {
-                MovieId = Id,
+                MovieGuid = Id,
                 Title = request.Title
             };
 
@@ -89,11 +87,11 @@ namespace SFFApi.Controllers.V1
             }
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var locationUri = baseUrl + "/" + ApiRoutes.Movies.Get.Replace("{Id}", movie.MovieId.ToString());
+            var locationUri = baseUrl + "/" + ApiRoutes.Movies.Get.Replace("{Id}", movie.MovieGuid.ToString());
 
-            var response = new MovieResponse { MovieId = movie.MovieId, Title = movie.Title };
+            var response = new MovieResponse { MovieId = movie.MovieGuid, Title = movie.Title };
 
             return Created(locationUri, response);
-        }        
+        }      
     }
 }

@@ -1,22 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFFApi.Contracts.V1.Requests;
 using SFFApi.Data;
+using SFFApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFFApi.Domain
+namespace SFFApi.Services
 {
     public class MovieLibraryService : IMovieLibraryService
     {
         private readonly DataContext _dataContext;
-        public readonly List<MovieLibraryObject> MovieLibraryObjects;
 
         public MovieLibraryService(DataContext dataContext)
         {
             _dataContext = dataContext;
-            MovieLibraryObjects = _dataContext.MovieLibrary.ToList();
         }
 
         public async Task<bool> AddMovieToLibraryAsync(AddMovieToLibraryRequest request)
@@ -62,20 +61,27 @@ namespace SFFApi.Domain
 
         public async Task<bool> LoanRequestAsync(MovieLoanRequest request)
         {
-            var requestedMovie = await _dataContext.MovieLibrary.SingleOrDefaultAsync(m => m.MovieId == request.Movie.MovieId);
-            if(requestedMovie.Avaliable > 1)
+            var requestedMovie = await _dataContext.MovieLibrary.SingleOrDefaultAsync(m => m.MovieId == request.MovieId);
+            if(requestedMovie.Avaliable < 1)
             {
                 return false;
             }
+            var movie = await (from m in _dataContext.Movies
+                               where m.MovieGuid == request.MovieId
+                               select m).FirstOrDefaultAsync();
+
+            var studio = await (from s in _dataContext.Studios
+                               where s.StudioGuid == request.StudioId
+                               select s).FirstOrDefaultAsync();
 
             var loanInstance = new MovieLoanInstance
             {
-                Movie = request.Movie,
-                Studio = request.Studio,
+                MovieId = movie.Id,
+                StudioId = studio.Id,
                 TimeOfLoan = DateTime.Now
             };
 
-            requestedMovie.Avaliable--; // One movie less avaliable in library
+            requestedMovie.Avaliable--;
 
             await _dataContext.MovieLoans.AddAsync(loanInstance);
             var created = await _dataContext.SaveChangesAsync();
@@ -84,8 +90,8 @@ namespace SFFApi.Domain
 
         public async Task<bool> ReturnRequestAsync(MovieLoanRequest request)
         {
-            var movieLoanToReturn = await _dataContext.MovieLoans.SingleOrDefaultAsync(m => m.Movie.MovieId == request.Movie.MovieId && m.Studio.StudioId == request.Studio.StudioId);
-            var requestedMovieLibraryInstance = await _dataContext.MovieLibrary.SingleOrDefaultAsync(m => m.MovieId == request.Movie.MovieId);
+            var movieLoanToReturn = await _dataContext.MovieLoans.SingleOrDefaultAsync(m => m.Movie.MovieGuid == request.MovieId && m.Studio.StudioGuid == request.StudioId);
+            var requestedMovieLibraryInstance = await _dataContext.MovieLibrary.SingleOrDefaultAsync(m => m.MovieId == request.MovieId);
 
             if (movieLoanToReturn == null) // No loan instance found
             {
